@@ -1,0 +1,174 @@
+<!documentOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      #zone {
+        width: 250px;
+        height: 150px;
+        display: block;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        border: 4px dashed khaki;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .none {
+        display: none;
+      }
+
+      input {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="zone">Перетащи файл сюда или нажми здесь</div>
+    <div id="pre"></div>
+    <div id="rez"></div>
+    <hr />
+    Открой консоль (F12 или Ctrl-Shift-I) и посмотри значение переменной
+    inputStr
+    <hr />
+    <button onclick="outputStr=myAlgoritm(inputStr);">Вычислить</button>
+    <span id="rezAlgo"></span>
+    <br /><span>
+      В этом примере вершины с нечетными номерами будут покрашены в красный
+      цвет, а длины дуг будут увеличены на 5.<br />
+      Открой консоль (F12 или Ctrl-Shift-I) и посмотри значение переменной
+      outputStr
+    </span>
+    <hr />
+    <button onclick="save(outputStr);">Сохранить</button>
+    <div id="out"></div>
+    <input type="file" />
+    <script>
+      const dropZone = document.getElementById("zone");
+      const input = document.querySelector("input");
+      let file, fileOut;
+      let inputStr, outputStr;
+
+      document.addEventListener("dragover", (ev) => ev.preventDefault());
+      document.addEventListener("drop", (ev) => ev.preventDefault());
+
+      dropZone.addEventListener("drop", (ev) => {
+        ev.preventDefault();
+
+        console.log(ev.dataTransfer);
+
+        file = ev.dataTransfer.files[0];
+
+        console.log(file);
+
+        handleFile(file);
+      });
+
+      dropZone.addEventListener("click", () => {
+        input.click();
+        input.addEventListener("change", () => {
+          console.log(input.files);
+
+          file = input.files[0];
+
+          console.log(file);
+
+          handleFile(file);
+        });
+      });
+
+      const handleFile = (file) => {
+        dropZone.remove();
+        input.remove();
+
+        console.log(file.type);
+
+        if (
+          file.type === "text/html" ||
+          file.type === "text/css" ||
+          file.type === "text/javascript"
+        )
+          return;
+
+        if (file.type === "application/pdf") {
+          createIframe(file);
+          return;
+        }
+
+        const type = file.type.replace(/\/.+/, "");
+
+        console.log(type);
+
+        switch (type) {
+          /*    case "image":
+                createImage(file);
+                break;
+              case "audio":
+                createAudio(file);
+                break;
+              case "video":
+                createVideo(file);
+                break;*/
+          case "text":
+            createText(file);
+            break;
+
+          default:
+            document.body.innerHTML = `<h3>Не текстовый файл!</h3>`;
+            const timer = setTimeout(() => {
+              location.reload();
+              clearTimeout(timer);
+            }, 2000);
+            break;
+        }
+      };
+
+      ///////////////////////////////////////////////////////////
+      const createText = (text) => {
+        const reader = new FileReader();
+        reader.readAsText(text); //, "windows-1251");
+        reader.onload = () => {
+          inputStr = reader.result;
+          document.getElementById("rez").innerHTML = inputStr;
+          document.getElementById(
+            "pre"
+          ).innerHTML = `<p><pre>${inputStr}</pre></p><hr>`;
+        };
+      };
+      ///////////////////////////////////////////////////////////////////
+
+      //===========================================================================================
+
+      function save(outputStr) {
+        // создаем файл
+        fileOut = new Blob(
+          // сериализуем данные
+          [outputStr],
+          {
+            type: "text/plain",
+          }
+        );
+        // проверяем
+        console.log(fileOut);
+        // создаем элемент "a"
+        const link = document.createElement("a");
+        // привязываем атрибут "href" тега "a" к созданному файлу
+        link.setAttribute("href", URL.createObjectURL(fileOut));
+        // атрибут "download" позволяет скачивать файлы, на которые указывает ссылка
+        // значение этого атрибута - название скачиваемого файла
+        link.setAttribute("download", "fileOut.txt");
+        // текстовое содержимое ссылки
+        link.textContent = "Скачать результат";
+        // помещаем элемент в контейнер с классом "main"
+        document.getElementById("out").append(link);
+        // удаляем ссылку на файл
+        URL.revokeObjectURL(fileOut);
+
+        //==================================================================================
+      }
+    </script>
+    <script src="algorithm.js"></script>
+  </body>
+</html>
