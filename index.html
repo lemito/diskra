@@ -1,60 +1,165 @@
 <!documentOCTYPE html>
 <html>
-  <head>
-    <base target="_top" />
+<head>
+    <base target="_top"/>
     <style>
-      #zone {
-        width: 250px;
-        height: 150px;
-        display: block;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        border: 4px dashed khaki;
-        border-radius: 8px;
-        cursor: pointer;
-      }
+        #zone {
+            width: 250px;
+            height: 150px;
+            display: block;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            border: 4px dashed khaki;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-      .none {
-        display: none;
-      }
+        .none {
+            display: none;
+        }
 
-      input {
-        display: none;
-      }
+        input {
+            display: none;
+        }
+
+        .glow-on-hover {
+            width: 220px;
+            height: 50px;
+            border: none;
+            outline: none;
+            color: #fff;
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:before {
+            content: '';
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            animation: glowing 20s linear infinite;
+            opacity: 0;
+            transition: opacity .3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:active {
+            color: #000
+        }
+
+        .glow-on-hover:active:after {
+            background: transparent;
+        }
+
+        .glow-on-hover:hover:before {
+            opacity: 1;
+        }
+
+        .glow-on-hover:after {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #111;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 400% 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .save-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: start;
+            padding-left: 20px; /* Увеличиваем отступ слева для размещения иконки */
+            border: none; /* Убираем стандартный бордер кнопки */
+            background-color: transparent; /* Сделаем фон кнопки прозрачным */
+            cursor: pointer; /* Изменяем курсор на указатель при наведении */
+        }
+
+        .icon-container {
+            margin-right: 10px; /* Добавляем небольшой отступ справа от иконки */
+        }
+
+        #Livello_1 {
+            color: white;
+        }
+
     </style>
-  </head>
+</head>
 
-  <body>
-    <div id="zone">Перетащи файл сюда или нажми здесь</div>
-    <div id="pre"></div>
-    <div id="rez"></div>
-    <hr />
-    Открой консоль (F12 или Ctrl-Shift-I) и посмотри значение переменной
-    inputStr
-    <hr />
-    <button onclick="outputStr=myAlgoritm(inputStr);">Вычислить</button>
-    <span id="rezAlgo"></span>
-    <br /><span>
-      В этом примере вершины с нечетными номерами будут покрашены в красный
-      цвет, а длины дуг будут увеличены на 5.<br />
-      Открой консоль (F12 или Ctrl-Shift-I) и посмотри значение переменной
-      outputStr
-    </span>
-    <hr />
-    <button onclick="save(outputStr);">Сохранить</button>
-    <div id="out"></div>
-    <input type="file" />
-    <script>
-      const dropZone = document.getElementById("zone");
-      const input = document.querySelector("input");
-      let file, fileOut;
-      let inputStr, outputStr;
+<body>
+<div id="zone">Перетащи файл сюда или нажми здесь</div>
+<div id="pre"></div>
+<div id="rez"></div>
+<hr/>
+<p>Программа для нахождения шарнира (точек сочленения) в графе</p>
+<hr/>
+<button class="glow-on-hover save-button" onclick="outputStr=myAlgoritm(inputStr);">
+    <div class="icon-container">
+        <!-- Иконка -->
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path d="M320-240h60v-80h80v-60h-80v-80h-60v80h-80v60h80v80Zm200-30h200v-60H520v60Zm0-100h200v-60H520v60Zm44-152 56-56 56 56 42-42-56-58 56-56-42-42-56 56-56-56-42 42 56 56-56 58 42 42Zm-314-70h200v-60H250v60Zm-50 472q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
+        </svg>
+    </div>
+    Вычислить
+</button>
+<hr>
+<span id="rezAlgo"></span>
+<hr/>
+<button class="glow-on-hover save-button" onclick="save(outputStr);">
+    <div class="icon-container">
+        <!-- Иконка -->
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/>
+        </svg>
+    </div>
+    Сохранить в файл
+</button>
+<div id="out"></div>
+<hr>
+<button class="glow-on-hover save-button" onclick="window.location.reload();">
+    <div class="icon-container">
+        <!-- Иконка -->
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/>
+        </svg>
+    </div>
+    Ввод нового файла
+</button>
+<input type="file"/>
+<script>
+    const dropZone = document.getElementById("zone");
+    const input = document.querySelector("input");
+    let file, fileOut;
+    let inputStr, outputStr;
 
-      document.addEventListener("dragover", (ev) => ev.preventDefault());
-      document.addEventListener("drop", (ev) => ev.preventDefault());
+    document.addEventListener("dragover", (ev) => ev.preventDefault());
+    document.addEventListener("drop", (ev) => ev.preventDefault());
 
-      dropZone.addEventListener("drop", (ev) => {
+    dropZone.addEventListener("drop", (ev) => {
         ev.preventDefault();
 
         console.log(ev.dataTransfer);
@@ -64,37 +169,37 @@
         console.log(file);
 
         handleFile(file);
-      });
+    });
 
-      dropZone.addEventListener("click", () => {
+    dropZone.addEventListener("click", () => {
         input.click();
         input.addEventListener("change", () => {
-          console.log(input.files);
+            console.log(input.files);
 
-          file = input.files[0];
+            file = input.files[0];
 
-          console.log(file);
+            console.log(file);
 
-          handleFile(file);
+            handleFile(file);
         });
-      });
+    });
 
-      const handleFile = (file) => {
+    const handleFile = (file) => {
         dropZone.remove();
         input.remove();
 
         console.log(file.type);
 
         if (
-          file.type === "text/html" ||
-          file.type === "text/css" ||
-          file.type === "text/javascript"
+            file.type === "text/html" ||
+            file.type === "text/css" ||
+            file.type === "text/javascript"
         )
-          return;
+            return;
 
         if (file.type === "application/pdf") {
-          createIframe(file);
-          return;
+            createIframe(file);
+            return;
         }
 
         const type = file.type.replace(/\/.+/, "");
@@ -102,53 +207,53 @@
         console.log(type);
 
         switch (type) {
-          /*    case "image":
-                createImage(file);
+            /*    case "image":
+                  createImage(file);
+                  break;
+                case "audio":
+                  createAudio(file);
+                  break;
+                case "video":
+                  createVideo(file);
+                  break;*/
+            case "text":
+                createText(file);
                 break;
-              case "audio":
-                createAudio(file);
-                break;
-              case "video":
-                createVideo(file);
-                break;*/
-          case "text":
-            createText(file);
-            break;
 
-          default:
-            document.body.innerHTML = `<h3>Не текстовый файл!</h3>`;
-            const timer = setTimeout(() => {
-              location.reload();
-              clearTimeout(timer);
-            }, 2000);
-            break;
+            default:
+                document.body.innerHTML = `<h3>Не текстовый файл!</h3>`;
+                const timer = setTimeout(() => {
+                    location.reload();
+                    clearTimeout(timer);
+                }, 2000);
+                break;
         }
-      };
+    };
 
-      ///////////////////////////////////////////////////////////
-      const createText = (text) => {
+    ///////////////////////////////////////////////////////////
+    const createText = (text) => {
         const reader = new FileReader();
         reader.readAsText(text); //, "windows-1251");
         reader.onload = () => {
-          inputStr = reader.result;
-          document.getElementById("rez").innerHTML = inputStr;
-          document.getElementById(
-            "pre"
-          ).innerHTML = `<p><pre>${inputStr}</pre></p><hr>`;
+            inputStr = reader.result;
+            document.getElementById("rez").innerHTML = inputStr;
+            document.getElementById(
+                "pre"
+            ).innerHTML = `<p><pre>${inputStr}</pre></p><hr>`;
         };
-      };
-      ///////////////////////////////////////////////////////////////////
+    };
+    ///////////////////////////////////////////////////////////////////
 
-      //===========================================================================================
+    //===========================================================================================
 
-      function save(outputStr) {
+    function save(outputStr) {
         // создаем файл
         fileOut = new Blob(
-          // сериализуем данные
-          [outputStr],
-          {
-            type: "text/plain",
-          }
+            // сериализуем данные
+            [outputStr],
+            {
+                type: "text/plain",
+            }
         );
         // проверяем
         console.log(fileOut);
@@ -167,8 +272,8 @@
         URL.revokeObjectURL(fileOut);
 
         //==================================================================================
-      }
-    </script>
-    <script src="algorithm.js"></script>
-  </body>
+    }
+</script>
+<script src="algorithm.js"></script>
+</body>
 </html>
