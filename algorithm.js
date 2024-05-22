@@ -47,8 +47,8 @@ function myAlgoritm(inputStr) {
       msg += " Нет секции <Edges>.";
     }
     console.log(msg);
-    let rez = document.getElementById("rezAlgo");
-    rez.innerHTML += " Готово. <hr>";
+    // let rez = document.getElementById("rezAlgo");
+    // rez.innerHTML += " Готово. <hr>";
     // обрабатываем
        /* МОЙ КОД */
     console.log(A, count);
@@ -106,20 +106,64 @@ function myAlgoritm(inputStr) {
         return articulationPoints;
     }
 
+    function recolorVertexes(vertexIndexes, color) {
+        vertexIndexes.forEach(index => {
+            let vertex = vertexes[index - 1];
+            vertex[2] = color;
+        });
+    }
+
     console.log(typeof A[0][0])
+    // const articulationPoints = findArticulationPoints(A, count);
+    // console.log(articulationPoints);
+    // if (articulationPoints.length !== 0) {
+    //     rez.innerHTML += "Шарниры графа: " + articulationPoints.join(', ');
+    //     outputStr = "Шарниры графа: " + articulationPoints.join(', ');
+    //     recolorVertexes(articulationPoints, 'rgb(255,0,0)');
+    //
+    // }
+    // else {
+    //     rez.innerHTML += "Шарниры в графе отсуствуют!";
+    //     outputStr = "Шарниры в графе отсуствуют!";
+    //     rez.style.color = "red";
+    // }
+    //
+    // console.log(vertexes);
+    //
+    // return outputStr;
     const articulationPoints = findArticulationPoints(A, count);
-    console.log(articulationPoints);
     if (articulationPoints.length !== 0) {
-        rez.innerHTML += "Шарниры графа: " + articulationPoints.join(', ');
         outputStr = "Шарниры графа: " + articulationPoints.join(', ');
-    }
-    else {
-        rez.innerHTML += "Шарниры в графе отсуствуют!";
-        outputStr = "Шарниры в графе отсуствуют!";
-        rez.style.color = "red";
+
+        // Перекрашиваем шарнирные точки в красный цвет
+        recolorVertexes(articulationPoints, 'rgb(255,0,0)');
+    } else {
+        outputStr = "Шарниры в графе отсутствуют!";
     }
 
+    // Создаем новую строку блоков <Vertexes>
+    let newVertexesStr = "<Vertexes>\n";
+    vertexes.forEach(vertex => {
+        newVertexesStr += vertex.join(' ') + '\n';
+    });
 
-    return outputStr;
+    // Формируем итоговый текст
+    let outputFile = `${count}\n`;
+    A.forEach(row => {
+        outputFile += row.join(' ') + '\n';
+    });
+    outputFile += "<Text>\n";
+    outputFile += outputStr + '\n';
+    outputFile += newVertexesStr;
+    outputFile += "<Edges>\n";
+    edges.forEach(edge => {
+        outputFile += edge.join(' ') + '\n';
+    });
+
+    // Вывод итогового текста
+    let rez = document.getElementById("rezAlgo");
+    rez.innerHTML += "<pre>" + outputFile + "</pre>";
+
+    return outputFile;
 
   }
